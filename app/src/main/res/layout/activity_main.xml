@@ -46,25 +46,15 @@
             android:layout_alignParentStart="false"
             android:layout_alignParentEnd="false"
             android:layout_toEndOf="@id/startButton"
-            android:layout_alignTop="@+id/startButton" />
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/spinner_title"
-            android:layout_marginTop="50dp" />
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView" />
+            android:layout_alignTop="@+id/startButton"
+            android:onClick="openDialogForAdd" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/spinner"
-            android:layout_centerHorizontal="true">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="70dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +66,7 @@
                 android:paddingRight="5dp"
                 android:textColor="@color/abc_primary_text_disable_only_material_light" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/nameTextView"
@@ -95,7 +85,7 @@
                 android:paddingRight="5dp"
                 android:textColor="@color/abc_primary_text_disable_only_material_light" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ageTextView"
@@ -114,7 +104,7 @@
                 android:paddingRight="5dp"
                 android:textColor="@color/abc_primary_text_disable_only_material_light" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/IdTextView"
@@ -134,14 +124,13 @@
                 android:paddingRight="5dp"
                 android:textColor="@color/abc_primary_text_disable_only_material_light" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/sexTextView"
                 android:hint="M/F"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingRight="10dp" />
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -149,28 +138,27 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentStart="false"
-        android:layout_alignParentEnd="false"
         android:id="@+id/lowerLayoutForGraph"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="100dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/layoutForGraph"
-            android:layout_centerInParent="true"
             android:weightSum="1"
             android:orientation="horizontal"
             android:layout_marginTop="100dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true">
             <com.jjoe64.graphview.GraphView
                 android:layout_width="match_parent"
-                android:layout_height="200dip"
+                android:layout_height="match_parent"
+                android:backgroundTint="#cccccc"
                 android:id="@+id/graph" />
         </LinearLayout>
     </RelativeLayout>
-
 </RelativeLayout>

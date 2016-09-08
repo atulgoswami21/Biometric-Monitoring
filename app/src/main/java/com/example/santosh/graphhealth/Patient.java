@@ -3,6 +3,8 @@ package com.example.santosh.graphhealth;
 import android.renderscript.Sampler;
 import android.util.Log;
 
+import com.jjoe64.graphview.series.DataPoint;
+
 import java.security.Key;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -18,6 +20,7 @@ public class Patient {
     public Boolean Sex;
     private int LengthOfData;
     private float[] Data;
+
 //    public Dictionary samplePatient = new Dictionary() {
 //        @Override
 //        public int size() {
@@ -122,5 +125,22 @@ public class Patient {
 //        samplePatient.put("Age",age);
 //        samplePatient.put("Sex",sex);
 //    }
+    public DataPoint[] generateData() {
+        int count = 20;
+        DataPoint[] values = new DataPoint[count];
+        for (int i=0; i<count; i++) {
+            double x = i;
+            double f = mRand.nextDouble()*0.15+0.3;
+            double y = Math.sin(i*f+2) + mRand.nextDouble()*0.3;
+            DataPoint v = new DataPoint(x, y);
+            values[i] = v;
+        }
+        return values;
+    }
 
+    double mLastRandom = 2;
+    Random mRand = new Random();
+    public double getRandom() {
+        return mLastRandom += mRand.nextDouble()*0.5 - 0.25;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.santosh.graphhealth;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -14,49 +15,57 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
+
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity{
 
+    private Runnable timerRunnable;
+    private Handler timerHandler = new Handler();
+    private boolean[] timerFlag = {false};
+    private double lastValue = 21d;
+
+
+    //name, age, id, sex
+    public static void setPatientText(String Name, String Age, String ID, String SEX,View view){
+
+        TextView name = (TextView) view.findViewById(R.id.nameTextView);
+        TextView age = (TextView) view.findViewById(R.id.ageTextView);
+        TextView identity = (TextView) view.findViewById(R.id.IdTextView);
+        TextView sex = (TextView) view.findViewById(R.id.sexTextView);
+
+        name.setText(Name);
+        age.setText(String.valueOf(Age));
+        identity.setText(String.valueOf(ID));
+        sex.setText(String.valueOf(SEX));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        float[] sample = new float[]{0, 0, 0, 0, 0};
-        String[] hlabel = new String[]{"X", "1","2","3"};
-        String[] vlabel = new String[]{"Y", "10","20","30"};
-        final boolean[] timerFlag = {false};
-        final String MY_TAG = "debugging";
-
         final Patient p = new Patient(1, 11, "Momo", Patient.MALE, 10);
-        final GraphView graph = new GraphView(this, sample, "Health Graph", hlabel, vlabel, GraphView.LINE);
 
-        graph.setBackgroundColor(Color.BLACK);
+        final GraphView graph = (GraphView) findViewById(R.id.graph);
+        Toast.makeText(this, "called in onCreate " , Toast.LENGTH_LONG).show();
 
-        final Handler timerHandler = new Handler();
-        final Runnable timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                timerFlag[0] = true;
-                p.setPatientData(10);
-                float f[] = p.getPatientData();
-                Log.d(MY_TAG, "Chal chutiye");
-                graph.setValues(f);
-                //Redraw the graph
-                graph.invalidate();
-                // Repost the run method in the queue so that it can be called again after 100 ms
-                timerHandler.postDelayed(this, 500);
-            }
-        };
 
+        final LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(p.generateData());
+        graph.addSeries(series);
+        graph.setVisibility(View.GONE);
+        graph.setTitle("Health Monitor");
 
         Button start = (Button) findViewById(R.id.startButton);
         Button stop = (Button) findViewById(R.id.stopButton);
         Button add = (Button) findViewById(R.id.addButton);
+
         TextView name = (TextView) findViewById(R.id.nameTextView);
         TextView age = (TextView) findViewById(R.id.ageTextView);
         TextView identity = (TextView) findViewById(R.id.IdTextView);
@@ -72,7 +81,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v){
 
                 if (!timerFlag[0]) {
-                    timerHandler.postDelayed(timerRunnable, 0);
+                    graph.setVisibility(View.VISIBLE);
+                    timerFlag[0] = true;
+                    timerRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            lastValue += 1d;
+                            series.appendData(new DataPoint(lastValue, p.getRandom()),true,40);
+                            timerHandler.postDelayed(this, 300);
+
+                        }
+                    };
+                    timerHandler.postDelayed(timerRunnable, 300);
                 }
             }
         });
@@ -80,59 +100,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v){
                 timerFlag[0] = false;
                 timerHandler.removeCallbacks(timerRunnable);
-                float f1[] = {0,0};
-                graph.setValues(f1);
-//                 Redraw the graph
-                graph.invalidate();
-
+                graph.setVisibility(View.GONE);
             }
         });
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.layoutForGraph);
-        layout.addView(graph);
-
-        // Spinner element
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-
-        // Spinner click listener
-        spinner.setOnItemSelectedListener(this);
-
-        // Spinner Drop down elements
-        List<String> categories = new ArrayList<String>();
-        categories.add("Santi");
-        categories.add("Momo");
-        categories.add("Mamu");
-        categories.add("Shukla");
-
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
-
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
-        // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
-        final Patient p = new Patient(2, 22, item, Patient.MALE, 20);
-        TextView name = (TextView) findViewById(R.id.nameTextView);
-        name.setText(item);
+    public void openDialogForAdd(View view){
+        add_patient addpatient = new add_patient();
+        addpatient.show(getFragmentManager(),"Add patient alert");
 
-        float f1[] = {0,0};
-        //graph.setValues(f1);
-//      Redraw the graph
-        //graph.invalidate();
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-    }
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
     }
 
 }
