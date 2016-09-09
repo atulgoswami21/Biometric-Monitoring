@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:text="Female"
                 android:id="@+id/female"
-                android:checked="true" />
+                 />
         </RadioGroup>
 
 

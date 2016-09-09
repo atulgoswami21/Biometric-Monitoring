@@ -15,15 +15,11 @@ import android.widget.Toast;
 import java.util.List;
 
 //import static android.app.PendingIntent.getActivity;
-
-/**
- * Created by Mohd on 9/6/2016.
- */
-public class add_patient extends DialogFragment {
+public class AddNewPatient extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        //new alertdialog for displaying add_patient.xml
+        //new alertdialog for displaying AddNewPatient.xml
         AlertDialog.Builder addpbuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater addpinflator = getActivity().getLayoutInflater();
         View view =addpinflator.inflate(R.layout.addpatient,null);
@@ -48,14 +44,7 @@ public class add_patient extends DialogFragment {
                 RadioGroup patientsexRG = (RadioGroup) f.findViewById(R.id.sex);
 
                 //Determining GENDER selected
-                String  patientsex;
-                int selected = patientsexRG.getCheckedRadioButtonId();
-                RadioButton radioselected = (RadioButton) f.findViewById(selected);
 
-                if (radioselected.getText() == "Male")
-                { patientsex= "Male";}
-                else
-                {patientsex = "Female";}
 
 
                 //set on focuschange listner
@@ -103,9 +92,24 @@ public class add_patient extends DialogFragment {
                     String patientage = patientageET.getText().toString();
                     String patientname = patientnameET.getText().toString();
                     String patientid = patientidET.getText().toString();
+                    String  patientsex;
+                    int selected = patientsexRG.getCheckedRadioButtonId();
+                    RadioButton radioselected = (RadioButton) f.findViewById(selected);
+
+                     patientsex = radioselected.getText().toString() ;
+                    if (patientsex == "Male"){
+                        patientsex = "M";
+                    }
+                    else{
+                        patientsex = "F";
+                    }
                     //new Patient
 
                     MainActivity.setPatientText(patientname,patientage,patientid, patientsex,getActivity().findViewById(R.id.upperLayoutForButtons));
+                }
+                else {
+                    Toast error = Toast.makeText(getActivity(), "Invalid Input" , Toast.LENGTH_LONG);
+                    error.show();
                 }
 
             }
