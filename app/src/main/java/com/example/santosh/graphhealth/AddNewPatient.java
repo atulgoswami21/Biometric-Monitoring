@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -93,19 +94,24 @@ public class AddNewPatient extends DialogFragment {
                     String patientname = patientnameET.getText().toString();
                     String patientid = patientidET.getText().toString();
                     String  patientsex;
+
                     int selected = patientsexRG.getCheckedRadioButtonId();
                     RadioButton radioselected = (RadioButton) f.findViewById(selected);
 
-                     patientsex = radioselected.getText().toString() ;
-                    if (patientsex == "Male"){
-                        patientsex = "M";
-                    }
-                    else{
-                        patientsex = "F";
-                    }
+                    patientsex = radioselected.getText().toString() ;
+
+//                    if (patientsex == "Male"){
+//                        patientsex = "M";
+//                    }
+//                    else{
+//                        patientsex = "F";
+//                    }
                     //new Patient
 
                     MainActivity.setPatientText(patientname,patientage,patientid, patientsex,getActivity().findViewById(R.id.upperLayoutForButtons));
+//                    Toast error = Toast.makeText(getActivity(), patientsex, Toast.LENGTH_LONG);
+//                    error.show();
+
                 }
                 else {
                     Toast error = Toast.makeText(getActivity(), "Invalid Input" , Toast.LENGTH_LONG);
