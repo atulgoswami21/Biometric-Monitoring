@@ -1,6 +1,7 @@
 package com.example.santosh.graphhealth;
 
 import android.graphics.Color;
+import android.hardware.SensorEventListener;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,13 +10,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//Motion Sensor
+import android.hardware.SensorEventListener;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private Runnable timerRunnable;
     private Handler timerHandler = new Handler();
@@ -123,4 +129,16 @@ public class MainActivity extends AppCompatActivity{
         return mLastRandom += mRand.nextDouble()*0.5 - 0.25;
     }
 
+    /**
+     * Sensor implemetation
+     */
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
