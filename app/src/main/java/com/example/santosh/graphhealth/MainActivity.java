@@ -1,5 +1,6 @@
 package com.example.santosh.graphhealth;
 
+
 import android.hardware.SensorEventListener;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,11 @@ import android.content.Context;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+// SQLITE Database handler and exception
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 
 import java.util.Random;
@@ -74,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Button add = (Button) findViewById(R.id.addButton);
 
         final TextView name = (TextView) findViewById(R.id.nameTextView);
-        TextView age = (TextView) findViewById(R.id.ageTextView);
-        TextView identity = (TextView) findViewById(R.id.IdTextView);
-        TextView sex = (TextView) findViewById(R.id.sexTextView);
+        final TextView age = (TextView) findViewById(R.id.ageTextView);
+        final TextView identity = (TextView) findViewById(R.id.IdTextView);
+        final TextView sex = (TextView) findViewById(R.id.sexTextView);
 
         name.setText("Patient");
         age.setText(String.valueOf(22));
@@ -86,6 +92,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         start.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+
+                databaseinit(name.getText().toString(), identity.getText().toString(), age.getText().toString(), sex.getText().toString());
+
+
+
                 graph.setVisibility(View.VISIBLE);
                 graph.setTitle("Health Graph for "+name.getText().toString());
                     timerHandler.removeCallbacks(timerRunnable);
@@ -100,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     };
                     timerHandler.postDelayed(timerRunnable, 300);
             }
+
+
         });
         stop.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -120,6 +133,56 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+
+private void databaseinit(String name , String identity , String age, String sex) {
+    try{
+         SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
+        dbhandler.beginTransaction();
+        try{
+
+            dbhandler.execSQL("CREATE TABLE IF NOT EXISTS"
+                    + name+"_"+ identity+"_"+ age+"_"+ sex+ " "
+                    + "("
+                    + " time_stamp double PRIMARY KEY , "
+                    + " x_value float, "  // later change to int
+                    + " y_value float, "
+                    + " z_value float ); " );
+
+            dbhandler.setTransactionSuccessful();
+        }
+        catch (SQLiteException e) {
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        finally {
+            dbhandler.endTransaction();
+        }
+    }catch (SQLException e){
+
+        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+    }
+
+    private void databaseinsert(double timeStamp, float x, float y,float z) {
+        try{
+            SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
+            dbhandler.beginTransaction();
+
+            try{
+
+                dbhandler.execSQL( "insert into tblPat(name, age) values ('"+patientIDText+"', '"+ageText+"' );" );
+                //db.setTransactionSuccessful(); //commit your changes.setTransactionSuccessful();
+            }
+            catch (SQLiteException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            finally {
+                dbhandler.endTransaction();
+            }
+        }catch (SQLException e){
+
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
 
     public DataPoint[] generateData() {
         int count = 20;
@@ -176,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
             }
+        databaseinsert(timeStamp, x,y,z);
         }
     }
 
