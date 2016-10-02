@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //Motion Sensor
 import android.hardware.Sensor;
@@ -17,6 +18,7 @@ import android.content.Context;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
 
 import java.util.Random;
 
@@ -156,8 +158,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor healthMonitorSensor = event.sensor;
-        if(healthMonitorSensor.getType() == Sensor.TYPE_ACCELEROMETER){
+        float x, y, z;
+        long timeStamp, delta;
+        //implementing only for accelerometer
+        if(healthMonitorSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            x = event.values[0];
+            y = event.values[1];
+            z = event.values[2];
 
+            timeStamp = System.currentTimeMillis();
+            delta = timeStamp - lastUpdate;
+            if(delta > 100){
+                lastUpdate = timeStamp;
+                last_x = x;
+                last_y = y;
+                last_z = z;
+
+                Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
+            }
         }
     }
 
