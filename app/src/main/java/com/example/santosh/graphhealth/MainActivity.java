@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         //initialize sensors
-        this.sensorInit();
+        sensorInit();
 
         final GraphView graph = (GraphView) findViewById(R.id.graph);
 //        Toast.makeText(this, "called in onCreate " , Toast.LENGTH_LONG).show();
@@ -138,6 +138,7 @@ private void databaseinit(String name , String identity , String age, String sex
     try{
          SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
         dbhandler.beginTransaction();
+
         try{
 
             dbhandler.execSQL("CREATE TABLE IF NOT EXISTS"
@@ -161,15 +162,25 @@ private void databaseinit(String name , String identity , String age, String sex
         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
     }
     }
-
+                    //insert into table
     private void databaseinsert(double timeStamp, float x, float y,float z) {
         try{
             SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
             dbhandler.beginTransaction();
 
+            final TextView name_current = (TextView) findViewById(R.id.nameTextView);
+            final TextView age_current = (TextView) findViewById(R.id.ageTextView);
+            final TextView identity_current = (TextView) findViewById(R.id.IdTextView);
+            final TextView sex_current = (TextView) findViewById(R.id.sexTextView);
+
             try{
 
-                dbhandler.execSQL( "insert into tblPat(name, age) values ('"+patientIDText+"', '"+ageText+"' );" );
+                dbhandler.execSQL( "insert into "
+                                + name_current.getText().toString()+"_"+ identity_current.getText().toString()+"_"+ age_current.getText().toString()+"_"+ sex_current.getText().toString()
+                                + " (time_stamp , x_value, y_value, z_value) VALUES ("
+                                + "'" + timeStamp +"', '" + x +"', '" + y +"', '" + z +"');"
+
+                );
                 //db.setTransactionSuccessful(); //commit your changes.setTransactionSuccessful();
             }
             catch (SQLiteException e) {
