@@ -1,6 +1,5 @@
 package com.example.santosh.graphhealth;
 
-import android.graphics.Color;
 import android.hardware.SensorEventListener;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //Motion Sensor
-import android.hardware.SensorEventListener;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -34,8 +31,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     /**
      * Sensor Members
      */
-    private SensorManager senSensorManager;
-    private Sensor senAccelerometer;
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
 
     //name, age, id, sex
     public static void setPatientText(String Name, String Age, String ID, String SEX,View view){
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //initialize sensors
         this.sensorInit();
-        
+
         final GraphView graph = (GraphView) findViewById(R.id.graph);
 //        Toast.makeText(this, "called in onCreate " , Toast.LENGTH_LONG).show();
 //
@@ -143,18 +143,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
      */
 
     protected void sensorInit(){
-        this.senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        this.senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        this.senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+        this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        this.accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //rate is used in this function
+        this.sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    /**
+     * This is the event handler for sensor changes
+     * @param event : event fed from the android sensor
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
+        Sensor healthMonitorSensor = event.sensor;
+        if(healthMonitorSensor.getType() == Sensor.TYPE_ACCELEROMETER){
 
+        }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    /**
+     * this code block is for unbinding the listeners during application switches
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
