@@ -258,6 +258,18 @@ private void databaseinit(String name , String identity , String age, String sex
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
