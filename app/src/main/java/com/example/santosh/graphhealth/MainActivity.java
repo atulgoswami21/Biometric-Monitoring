@@ -14,6 +14,8 @@ import android.widget.Toast;
 import android.hardware.SensorEventListener;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+import android.content.Context;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -28,6 +30,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //private boolean[] timerFlag = {false};
     private double lastValue = 21d;
     private String PatientName = "Patient";
+
+    /**
+     * Sensor Members
+     */
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
 
     //name, age, id, sex
     public static void setPatientText(String Name, String Age, String ID, String SEX,View view){
@@ -47,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
+        //initialize sensors
+        this.sensorInit();
+        
         final GraphView graph = (GraphView) findViewById(R.id.graph);
 //        Toast.makeText(this, "called in onCreate " , Toast.LENGTH_LONG).show();
 //
@@ -130,8 +139,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     /**
-     * Sensor implemetation
+     * Sensor code block
      */
+
+    protected void sensorInit(){
+        this.senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        this.senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        this.senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
 
