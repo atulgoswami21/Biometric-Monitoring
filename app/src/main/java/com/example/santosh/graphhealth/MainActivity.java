@@ -1,9 +1,9 @@
 package com.example.santosh.graphhealth;
 
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         add.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                //start service
+                startService(new Intent(MainActivity.this, Accelerometer.class));
+
                 started = 0;
                 timerHandler.removeCallbacks(timerRunnable);
                 graph.setVisibility(View.GONE);
@@ -270,14 +273,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 last_x = x;
                 last_y = y;
                 last_z = z;
-
                 //Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
             }
-            if (started == 1){
+            if (started == 1)
                 databaseinsert(timeStamp, x,y,z);
-            }
-
-
         }
     }
 
