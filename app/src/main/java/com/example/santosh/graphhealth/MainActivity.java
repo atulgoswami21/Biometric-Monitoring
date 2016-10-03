@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //private boolean[] timerFlag = {false};
     private double lastValue = 21d;
     private String PatientName = "Patient";
+    PatientDBHandler PatientDB ;
     private int started;
     /**
      * Sensor Members
@@ -122,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         start.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                databaseinit(name.getText().toString(), identity.getText().toString(), age.getText().toString(), sex.getText().toString());
+
+                PatientDB.onCreateDB( name.getText().toString() + identity.getText().toString()+ age.getText().toString()+ sex.getText().toString());
                 started = 1;
 
                 graph.setVisibility(View.VISIBLE);
@@ -163,65 +165,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    private void databaseinit(String name , String identity , String age, String sex) {
-        try{
-             SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
-             dbhandler.beginTransaction();
-            try{
 
-                dbhandler.execSQL("CREATE TABLE IF NOT EXISTS "
-                    + name+"_"+ identity+"_"+ age+"_"+ sex+ " "
-                    + "("
-                    + " time_stamp double PRIMARY KEY , "
-                    + " x_value float, "  // later change to int
-                    + " y_value float, "
-                    + " z_value float ); " );
-
-                dbhandler.setTransactionSuccessful();
-                }
-            catch (SQLiteException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-            finally {
-                dbhandler.endTransaction();
-            }
-        }catch (SQLException e){
-            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        }
-
-    private void databaseinsert(double timeStamp, float x, float y,float z) {
-        try{
-            SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
-            dbhandler.beginTransaction();
-
-            final TextView name_current = (TextView) findViewById(R.id.nameTextView);
-            final TextView age_current = (TextView) findViewById(R.id.ageTextView);
-            final TextView identity_current = (TextView) findViewById(R.id.IdTextView);
-            final TextView sex_current = (TextView) findViewById(R.id.sexTextView);
-
-            try{
-
-                dbhandler.execSQL( "insert into "
-                                + name_current.getText().toString()+"_"+ identity_current.getText().toString()+"_"+ age_current.getText().toString()+"_"+ sex_current.getText().toString()
-                                + " (time_stamp , x_value, y_value, z_value) VALUES ("
-                                + "'" + timeStamp +"', '" + x +"', '" + y +"', '" + z +"');"
-
-                );
-                dbhandler.setTransactionSuccessful(); //commit your changes.setTransactionSuccessful();
-                Toast.makeText(MainActivity.this, "started is  : " + started  +" added" + timeStamp + x + " **** " + y + " **** "+ z + " **** " + "into" +  name_current.getText().toString()+"_"+ identity_current.getText().toString()+"_"+ age_current.getText().toString()+"_"+ sex_current.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-            catch (SQLiteException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-            finally {
-                dbhandler.endTransaction();
-            }
-        }catch (SQLException e){
-
-            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
 
     public DataPoint[] generateData() {
         int count = 20;
@@ -275,8 +219,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 last_z = z;
                 //Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
             }
-            if (started == 1)
-                databaseinsert(timeStamp, x,y,z);
+
         }
     }
 
