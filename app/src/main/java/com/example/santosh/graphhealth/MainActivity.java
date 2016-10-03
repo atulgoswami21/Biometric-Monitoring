@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //private boolean[] timerFlag = {false};
     private double lastValue = 21d;
     private String PatientName = "Patient";
+    private int started;
 
     /**
      * Sensor Members
@@ -92,10 +93,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         start.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
                 databaseinit(name.getText().toString(), identity.getText().toString(), age.getText().toString(), sex.getText().toString());
-
-
+                started = 1;
 
                 graph.setVisibility(View.VISIBLE);
                 graph.setTitle("Health Graph for "+name.getText().toString());
@@ -116,14 +115,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         stop.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
+                started = 0;
                 timerHandler.removeCallbacks(timerRunnable);
                 graph.setVisibility(View.GONE);
             }
         });
         add.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
+                started = 0;
                 timerHandler.removeCallbacks(timerRunnable);
                 graph.setVisibility(View.GONE);
                 AddNewPatient addpatient = new AddNewPatient();
@@ -134,14 +133,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-private void databaseinit(String name , String identity , String age, String sex) {
-    try{
-         SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
-        dbhandler.beginTransaction();
-
+    private void databaseinit(String name , String identity , String age, String sex) {
         try{
+             SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
+             dbhandler.beginTransaction();
+            try{
 
-            dbhandler.execSQL("CREATE TABLE IF NOT EXISTS"
+                dbhandler.execSQL("CREATE TABLE IF NOT EXISTS "
                     + name+"_"+ identity+"_"+ age+"_"+ sex+ " "
                     + "("
                     + " time_stamp double PRIMARY KEY , "
@@ -149,20 +147,20 @@ private void databaseinit(String name , String identity , String age, String sex
                     + " y_value float, "
                     + " z_value float ); " );
 
-            dbhandler.setTransactionSuccessful();
-        }
-        catch (SQLiteException e) {
+                dbhandler.setTransactionSuccessful();
+                }
+            catch (SQLiteException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            finally {
+                dbhandler.endTransaction();
+            }
+        }catch (SQLException e){
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        finally {
-            dbhandler.endTransaction();
         }
-    }catch (SQLException e){
-
-        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-    }
-    }
                     //insert into table
+
     private void databaseinsert(double timeStamp, float x, float y,float z) {
         try{
             SQLiteDatabase dbhandler = openOrCreateDatabase( "patient.db",MODE_PRIVATE, null );
@@ -181,7 +179,8 @@ private void databaseinit(String name , String identity , String age, String sex
                                 + "'" + timeStamp +"', '" + x +"', '" + y +"', '" + z +"');"
 
                 );
-                //db.setTransactionSuccessful(); //commit your changes.setTransactionSuccessful();
+                dbhandler.setTransactionSuccessful(); //commit your changes.setTransactionSuccessful();
+                Toast.makeText(MainActivity.this, "started is  : " + started  +" added" + timeStamp + x + " **** " + y + " **** "+ z + " **** " + "into" +  name_current.getText().toString()+"_"+ identity_current.getText().toString()+"_"+ age_current.getText().toString()+"_"+ sex_current.getText().toString(), Toast.LENGTH_SHORT).show();
             }
             catch (SQLiteException e) {
                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -248,9 +247,13 @@ private void databaseinit(String name , String identity , String age, String sex
                 last_y = y;
                 last_z = z;
 
-                Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
             }
-        databaseinsert(timeStamp, x,y,z);
+            if (started == 1){
+                databaseinsert(timeStamp, x,y,z);
+            }
+
+
         }
     }
 
