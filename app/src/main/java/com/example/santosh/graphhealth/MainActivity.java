@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +25,7 @@ import java.util.Random;
 //Motion Sensor
 // SQLITE Database handler and exception
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity{
 
     ProgressDialog mProgressDialog;
     String dbName;
@@ -41,13 +38,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private String PatientName = "Patient";
     PatientDBHandler PatientDB ;
     private int started;
-    /**
-     * Sensor Members
-     */
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private long lastUpdate = 0;
-    private float last_x, last_y, last_z;
 
     //name, age, id, sex
     public static void setPatientText(String Name, String Age, String ID, String SEX,View view){
@@ -182,77 +172,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public double getRandom() {
         return mLastRandom += mRand.nextDouble()*0.5 - 0.25;
-    }
-
-    /**
-     * Sensor code block
-     */
-
-    protected void sensorInit(){
-        this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        this.accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        //rate is used in this function
-        this.sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    /**
-     * This is the event handler for sensor changes
-     * @param event : event fed from the android sensor
-     */
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor healthMonitorSensor = event.sensor;
-        float x, y, z;
-        long timeStamp, delta;
-        //implementing only for accelerometer
-        if(healthMonitorSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            x = event.values[0];
-            y = event.values[1];
-            z = event.values[2];
-
-            timeStamp = System.currentTimeMillis();
-            delta = timeStamp - lastUpdate;
-            if(delta > 100){
-                lastUpdate = timeStamp;
-                last_x = x;
-                last_y = y;
-                last_z = z;
-                //Toast.makeText(this, "Bitch @: " + x + " : " + y + " : " + z , Toast.LENGTH_LONG).show();
-            }
-
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    /**
-     * this code block is for unbinding the listeners during application switches
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private void processDownloadClick() {

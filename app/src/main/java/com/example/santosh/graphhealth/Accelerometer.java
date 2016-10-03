@@ -30,7 +30,7 @@ public class Accelerometer extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Accelerometer Started", Toast.LENGTH_LONG).show();
         this.sensorInit();
     }
 
