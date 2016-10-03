@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity{
     //private boolean[] timerFlag = {false};
     private double lastValue = 21d;
     private String PatientName = "Patient";
-    PatientDBHandler PatientDB ;
+
     private int started;
 
     //name, age, id, sex
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity{
         start.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
-                PatientDB.onCreateDB( name.getText().toString() + identity.getText().toString()+ age.getText().toString()+ sex.getText().toString());
+
                 started = 1;
 
                 graph.setVisibility(View.VISIBLE);

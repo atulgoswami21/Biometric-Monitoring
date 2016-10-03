@@ -20,6 +20,9 @@ public class AddNewPatient extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
+
+
+
         //new alertdialog for displaying AddNewPatient.xml
         AlertDialog.Builder addpbuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater addpinflator = getActivity().getLayoutInflater();
@@ -88,6 +91,8 @@ public class AddNewPatient extends DialogFragment {
 //                        }
 //                    }
 //                });
+
+
                 //Fetching the user data
                 if (!patientageET.getText().toString().isEmpty() && !patientnameET.getText().toString().isEmpty() && !patientidET.getText().toString().isEmpty()  ) {
                     String patientage = patientageET.getText().toString();
@@ -106,9 +111,12 @@ public class AddNewPatient extends DialogFragment {
 //                    else{
 //                        patientsex = "F";
 //                    }
-                    //new Patient
+                    //new PatientPatientDBHandler PatientDB ;
 
+                    PatientDBHandler PatientDB = new PatientDBHandler();
+                    PatientDB.onCreateDB( patientname +"_" +  patientid +"_" + patientage +"_" + patientsex);
                     MainActivity.setPatientText(patientname,patientage,patientid, patientsex,getActivity().findViewById(R.id.upperLayoutForButtons));
+
 //                    Toast error = Toast.makeText(getActivity(), patientsex, Toast.LENGTH_LONG);
 //                    error.show();
 

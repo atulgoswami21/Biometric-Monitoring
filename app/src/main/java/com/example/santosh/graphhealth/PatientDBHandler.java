@@ -92,7 +92,7 @@ public class PatientDBHandler extends AppCompatActivity {
 
                 );
                 dbhandler.setTransactionSuccessful(); //commit your changes.setTransactionSuccessful();
-                Toast.makeText(this, "started is  : "   +" added" + timeStamp + x + " **** " + y + " **** "+ z + " **** " + "into" +  table_name, Toast.LENGTH_SHORT).show();
+
             }
             catch (SQLiteException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
