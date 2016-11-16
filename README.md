@@ -1,7 +1,6 @@
 # Biometric Monitoring
 
-This is project for class CSE 535 Mobile Computing.
-
+This is android application project under class CSE 535 Mobile Computing.
 
 ### Contributors Group29
   * Santosh Bidve -  1211219006, santoshb@asu.edu
