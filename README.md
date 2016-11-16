@@ -1,14 +1,15 @@
-# Assignment1MC
+# Biometric Monitoring
 
-This is the Programming Assignment #1 for the class CSE 535 Mobile Computing.
+This is project for class CSE 535 Mobile Computing.
 
-The Original Authors of the solutions are - 
-Group 29
-  # Santosh Bidve -  ASU Id# 1211219006, mail: santoshb@asu.edu
-  # Hitendra Shukla - ASU Id# 1211175859, mail: hyshukla@asu.edu
-  # Mohseen Mukaddam - ASU Id# 1209239729 mail: mohseen@asu.edu
-  # Mohamad Mudassar Shekh - ASU Id# 1211247229, mail:mshekh@asu.edu
+
+### Contributors Group29
+  * Santosh Bidve -  1211219006, santoshb@asu.edu
+  * Hitendra Shukla - 1211175859, hyshukla@asu.edu
+  * Mohseen Mukaddam - 1209239729 mohseen@asu.edu
+  * Mohamad Mudassar Shekh - 1211247229, mail:mshekh@asu.edu
   
-Note : We have used GraphView Library instead of the Original graphView Class provided as instructed by the TA.
-  
-##Read this: https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow
+### Features Implemented
+* GraphView to show Accelerometer Reading
+* Upload and download accelerometer Reading to/from Server
+ 
