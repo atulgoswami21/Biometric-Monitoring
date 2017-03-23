@@ -1,8 +1,8 @@
 # Biometric Monitoring
 
-This is android application project under class CSE 535 Mobile Computing.
+This is android application for monitoring the health of individuals using intuitive graphs.
 
-### Contributors Group29
+### Contributors 
   * Santosh Bidve -  1211219006 santoshb@asu.edu
   * Hitendra Shukla - 1211175859 hyshukla@asu.edu
   * Mohseen Mukaddam - 1209239729 mohseen@asu.edu
